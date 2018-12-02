@@ -10,8 +10,7 @@ from facebook_business.adobjects.adaccount import AdAccount
 import numpy as np
 import pandas as pd
 from scipy.optimize import minimize
-from googleapiclient.discovery import build
-from httplib2 import Http
+
 from oauth2client import file, client, tools
 from oauth2client.service_account import ServiceAccountCredentials
 import json
