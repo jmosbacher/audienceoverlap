@@ -138,17 +138,26 @@ class OverlapVisualization(Page):
             thresh = self.thresh_inp.value
             rankby = self.rankby_inp.value
             method = self.method_inp.value
+            substrings = self.substring_inp.value.split(',')
             pivot = self.pivot_inp.value
             pividx = 0
+            idxs = []
             for idx, name in enumerate(self.asource.data["name"]):
                 if name==pivot: 
                     pividx = idx
-                    break
-            idxs = self.asource.selected.indices
+                elif any([s in name for s in substrings]+['' in substrings]):
+                    idxs.append(idx)
+                elif idx in self.asource.selected.indices:
+                    idxs.append(idx)
+
+            # print(pividx)
+            # idxs = self.asource.selected.indices
             if len(idxs)<1:
                 raise RuntimeError('Nothing selected')
+
             if pividx in idxs:
-                idxs.pop(pividx)
+                idxs.remove(pividx)
+
             data = {k:[vs[idx] for idx in idxs] for k, vs in self.asource.data.items()}
             
             overlaps = self.data["overlaps"].to_dict()
@@ -200,6 +209,7 @@ class OverlapVisualization(Page):
         self.method_inp = Select(title='Preserve overlap',options=[('pivot','previous + pivot' ), ('chain','previous two')], value='pivot', )
         self.asource.on_change("data", self.data_changed)
         # self.asource.selected.on_change("indices", self.selected_changed)
+        self.substring_inp = TextInput(title='Match substrings (, seperated)', placeholder='*', width=700)
 
         cols = [
             TableColumn(field="name", title="Name", width=200),
@@ -214,7 +224,7 @@ class OverlapVisualization(Page):
         first = row(self.pivot_inp, )
         second = row(self.method_inp, self.rankby_inp)
         third = row(self.thresh_inp)
-        options = column(self.aud_list, first, second, third, self.show_btn)
+        options = column(self.substring_inp, self.aud_list, first, second, third, self.show_btn)
         return options
 
 
@@ -329,7 +339,7 @@ class OverlapVisualization(Page):
         self.rect = p.rect('xname', 'yname', 0.9, 0.9, source=self.osource,
             fill_color='color', alpha=0.4, line_color=None,
                 hover_line_color='black', hover_color='color')
-        self.text = p.text(x='xname', y='yname', text='overlap_perc_txt', text_font_size='8px',
+        self.text = p.text(x='xname', y='yname', text='overlap_perc_txt', text_font_size='0.4em',
          text_align='center', text_baseline='middle',color='color', source=self.osource)
 
         title = Paragraph(text=""" Overlap percentages are relative to y-axis audience""",
