@@ -1,10 +1,17 @@
 # Audience overlapper
 A simple little SPA to visualize audience overlap.
-## Getting started
+## Spin up a single server instance with Docker
  - git clone this repo.
- - make sure you have python3.6 (i use f"" strings because they are awesome so deal with it) with everything in requirements.txt installed.
- - create a folder called "credentials" under the audienceoverlap folder (next to the oython code).
- - copy your google.json/facebook.json credentials file/s (depending which you plan to use ) into the credentials folder.
- - run the app script "bash run_server.sh".
- - go to localhost:5006/audienceoverlap in your browser.
+ - Make sure you have Docker and docker-compose installed.
+ - create a folder called "credentials" under the app/audienceoverlap folder.
+ - copy your google.json credentials file into the credentials folder.
+ - open a terminal in the repo root directory and run "make up" **.
+ - go to `your-ip`:5006/ in your browser from anywhere in the network. If you are on the same computer running the server you can also use localhost:5006
+ - shut down and clean up image by running "make down"
  - Report all the bugs you find.
+* tested on OpenSUSE Linux.
+** You may need to use "sudo make up" if you havent added your user to the Docker group.
+
+## Coming soon to a location near you
+ - Support for pulling data from a Database.
+ - Api for pulling plots from existing webapps.
