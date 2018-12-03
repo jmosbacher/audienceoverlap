@@ -218,13 +218,14 @@ class OverlapVisualization(Page):
             TableColumn(field="approximate_count", title="Est. size",),
         ]
         #self.source = ColumnDataSource()
+        self.aud_list_title = Paragraph(text="Manual Selection")
         self.aud_list = DataTable(source=self.asource ,columns=cols, width=700, height=280)
         self.show_btn = Button(label='Show Overlaps', button_type="success", width=500, disabled=False)
         self.show_btn.on_click(self.show_overlaps)
         first = row(self.pivot_inp, )
         second = row(self.method_inp, self.rankby_inp)
         third = row(self.thresh_inp)
-        options = column(self.substring_inp, self.aud_list, first, second, third, self.show_btn)
+        options = column(self.substring_inp,self.aud_list_title, self.aud_list, first, second, third, self.show_btn)
         return options
 
 
