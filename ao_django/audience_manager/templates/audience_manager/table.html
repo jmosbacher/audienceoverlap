@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load render_table from django_tables2 %}
+{% load export_url from django_tables2 %}
+
+{% block content %}
+               <div class="card text-center w-100">
+                    <div class="card-header text-left">
+                            <div class="btn-group" role="group">
+                                <a href="{% url 'add' %}"><button class="btn btn-default btn-sm">Add</button></a>
+                                <div class="btn-group" role="group">
+                                    <button id="btnGroupDrop1" type="button" class="btn btn-default dropdown-toggle  btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Export
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                        {% for format in table.export_formats %}
+                                            <a class="dropdown-item" href="{% export_url format %}">{{ format }}</a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                
+                                    
+                            </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="ml-auto">
+                            {% render_table table %}
+                                  
+                        </div>
+                    </div>
+
+                </div>
+
+
+    
+{% endblock %}

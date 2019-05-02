@@ -1,0 +1,7 @@
+bokeh
+numpy
+pandas
+scipy
+facebook_business
+gspread
+oauth2client

@@ -1,0 +1,34 @@
+{% extends 'project_base.html' %}
+{% load staticfiles %}
+{% block stylsheets %}
+  {{ block.super }}
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+  <link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
+  <link href="/static/datepicker/css/datepicker.css" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="{% static 'js/datatableview.js' %}"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+<script src="/static/datepicker/js/bootstrap-datepicker.js"></script>
+
+<script type="text/javascript">
+  $.fn.editable.defaults.mode = 'inline';
+  datatableview.auto_initialize = false;
+  $(function(){
+      var xeditable_options = {};
+      datatableview.initialize($('.datatable'), {
+          fnRowCallback: datatableview.make_xeditable(xeditable_options),
+      });
+  });
+</script>
+{% endblock %}

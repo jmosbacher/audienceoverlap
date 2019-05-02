@@ -1,9 +1,93 @@
 version: '3'
+
 services:
-  nginx:
-    build: ./proxy
-    ports:
-      - "5006:80"
   bokeh-app:
-    build: ./app
-    command: bokeh serve audienceoverlap --allow-websocket-origin="*"
+    image: bokeh_app:latest
+    build: ./bokeh_app
+    command: bokeh serve audienceoverlap --address 0.0.0.0 --allow-websocket-origin="*" --use-xheaders --session-ids external-signed
+    environment:
+      - BOKEH_SECRET_KEY
+    networks:
+      - nginx_net
+    # ports:
+    #   - "5006"
+
+
+  nginx:
+    image: nginx_custom:latest
+    build: ./nginx
+    ports:
+      - "80:80"
+    environment:
+      - NGINX_HOST="[::]:80"
+      - NGINX_PORT=80
+      - DAPHNE_HOST=djangoapp
+      - DAPHNE_PORT=8001
+      - BOKEH_PORT=5006
+    volumes:
+      - static_volume:/static/
+      # - ./ao_django/static:/opt/services/djangoapp/src/static  # <-- bind the static volume
+      # - ./ao_django/media:/opt/services/djangoapp/src/media  # <-- bind the media volume
+    depends_on:
+      - djangoapp
+      - bokeh-app
+  
+    links:
+      - djangoapp
+    networks:
+      - nginx_net
+    # command: /bin/bash -c "envsubst < /etc/nginx/conf.d/service.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+  
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  djangoapp:
+    build: ./ao_django
+    image: "djangoapp:latest"
+    volumes: 
+      - static_volume:/static/ #:/opt/services/djangoapp/src/static/  # <-- bind the static volume
+      # - media_volume:/opt/services/djangoapp/src/media/  # <-- bind the media volume
+      # - ./ao_django/:/opt/services/djangoapp/src/
+    # command: python manage.py runserver
+    command: bash -c "daphne -b djangoapp -p 8001 ao_django.asgi:application"
+    ports:
+      - "8001:8001"
+    environment:
+      - REDIS_HOST=redis
+      - BOKEH_SECRET_KEY
+      - BOKEH_ADDRESS=http://${HOST_IP}/bokeh
+      - HOST_IP
+      - DJANGO_DEBUG
+    depends_on:
+      - redis
+    links:
+      - redis
+      - bokeh-app
+    networks:
+      - nginx_net
+      
+    # ports:
+    #   - "8000"
+
+networks:
+  nginx_net:
+    driver: bridge
+volumes:
+  database1_volume: 
+  static_volume:  # <-- declare the static volume
+  media_volume:  # <-- decl are the media volume
+  # worker:
+  #   image: "ao_django:latest"
+  #   working_dir: /opt/ao_django
+  #   command: bash -c "python manage.py runworker"
+  #   environment:
+  #     - REDIS_HOST=redis
+  #   networks:
+  #     - front
+  #     - back
+  #   depends_on:
+  #     - redis
+  #   links:
+  #     - redis

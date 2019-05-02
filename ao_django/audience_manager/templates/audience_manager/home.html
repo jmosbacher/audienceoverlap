@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="mx-auto">
+        <hr class="mt-0 mb-4">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+				<h6 class="alert-heading">Welcome to the Audience Overlap app</h6>
+				<hr class="mt-0 mb-4">
+				{% if user.is_authenticated %}
+					 <p>You are logged in as {{ user.first_name }} {{ user.last_name }}.</p>
+					 
+				{% else %}
+				<p>You are currently not logged in please <a class="lead" href="{% url 'login' %}">log in</a> to continue.</p>
+					
+				{% endif %}
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+				</button>
+
+        </div>
+</div>
+	
+{% endblock content %}

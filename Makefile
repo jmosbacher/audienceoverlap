@@ -18,14 +18,14 @@ help:
 
 build: ## Build docker image
 	@echo -----------------------------
-	@echo - Building country-comp app -
+	@echo - Building app -
 	@echo -----------------------------
 	docker-compose build
 
 up: ## Start the container and run the bokeh server app
 
 	@echo ------------------------------------
-	@echo - Start country-comp app container -
+	@echo - Start app container -
 	@echo ------------------------------------
 	docker-compose up -d
 	sleep 1
@@ -33,8 +33,9 @@ up: ## Start the container and run the bokeh server app
 
 down: ## Stop and remove the container
 	@echo ----------------------------------------------
-	@echo - Stop and Remove country-comp app container -
+	@echo - Stop and Remove app container -
 	@echo ----------------------------------------------
 	docker-compose down
+	
 
 .PHONY: build up down

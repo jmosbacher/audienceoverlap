@@ -1,0 +1,10 @@
+channels
+channels_redis
+django-crispy-forms
+django-invitations
+social-auth-app-django
+djangorestframework
+django-tables2
+django-datatable-view
+tablib
+bokeh
